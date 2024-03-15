@@ -26,28 +26,17 @@ This is a pipeline developed to process OpenITI mARkdown files for import into t
   ```
   ```
   {
-      "text_id": "MukhtasarShamailMuhammadiyya.Shamela0000700-ara",
-      "author_id": "0279Tirmidhi",
-      "text_version": "Shamela0000700-ara",
-      "title_ar": "NODATA",
-      "title_translit": "NODATA",
-      "title_auto": "Mukhtasar Shamail Muhammadiyya",
-      "title_translate": "NODATA",
-      "bibliography": "NODATA",
-      "page_count": 515,
-      "subject": "كتب الألباني",
-      "editor": "اختصره, حققه محمد ناصر الدين الألباني",
-      "edition": "NODATA",
-      "volumes": "1",
-      "publisher": "المكتبة الإسلامية - عمان - الأردن",
-      "pub_date": "NODATA",
-      "collection": "NODATA",
-      "transcriber": "NODATA",
-      "translator": "NODATA",
-      "digitization": "NODATA",
-      "ms_source": "NODATA",
-      "tags": "NODATA",
-      "url": "http://shamela.ws/index.php/book/700"
+    "text_uri": "0360Tabarani.Awail.JK000862-ara1",
+    "text_id": "JK000862",
+    "title_ar": "الأوائل للطبراني",
+    "title_lat": "NODATA",
+    "author_id": "0360Tabarani",
+    "ed_info": "محمد شكور بن محمود الحاجي أمرير :: بيروت :: 1403 :: مؤسسة الرسالة , دار الفرقان",
+    "collection": "al-Jāmiʿ al-Kabīr",
+    "tok_length": 5145,
+    "page_count": 100,
+    "volumes": "NODATA",
+    "tags": "_HADITH :: _AJZA :: _TARAJIM :: _TABAQAT"
   }
   ```
   Author Metadata JSON Object in json\author_meta:
@@ -56,14 +45,14 @@ This is a pipeline developed to process OpenITI mARkdown files for import into t
   ```
   ```
   {
-      "author_id": "0279Tirmidhi",
-      "author_ar": "محمد بن عيسى",
-      "author_raw": "محمد بن عيسى بن سورة بن موسى بن الضحاك، الترمذي، أبو عيسى (المتوفى: 279هـ)",
-      "author_translit": "NODATA",
-      "author_auto": "Tirmidhi",
-      "au_born_hij": "NODATA",
-      "au_death_hij": "279",
-      "au_death_greg": "NODATA"
+    "author_id": "0360Tabarani",
+    "author_ar": "سليمان بن أحمد الطبراني أبو القاسم",
+    "author_ar_shuhra": "الطبراني",
+    "author_lat": "Tabarani",
+    "author_lat_shuhra": "NODATA",
+    "author_auto": "Tabarani",
+    "au_death_hij": "360",
+    "version": "JK000862"
   }
   ```
   Example Page JSON Object in json\text_content\0279Tirmidhi.MukhtasarShamailMuhammadiyya.Shamela0000700-ara1:
@@ -86,8 +75,6 @@ This is a pipeline developed to process OpenITI mARkdown files for import into t
               "lem": "خاصّ",
               "rt": "خ.ص.ص",
               "pos": "adj",
-              "stt": "d",
-              "cas": "u"
           },
           {
               "index": 2,
@@ -95,8 +82,6 @@ This is a pipeline developed to process OpenITI mARkdown files for import into t
               "lem": "عَلَى",
               "rt": "ع.ل.#",
               "pos": "prep",
-              "stt": "na",
-              "cas": "na"
           },
           {
               "index": 3,
@@ -104,10 +89,8 @@ This is a pipeline developed to process OpenITI mARkdown files for import into t
               "lem": "عامّ",
               "rt": "ع.م.م",
               "pos": "adj",
-              "stt": "d",
-              "cas": "u"
           },
-  ...
+          ...
   ```
   You can adjust what morphological features you want to include in camel_analyzer module with reference in the [CAMeL Lab Docs](https://camel-tools.readthedocs.io/en/latest/reference/camel_morphology_features.html?highlight=diac)
 ### Additional Tool
