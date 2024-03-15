@@ -24,3 +24,5 @@ data/
 json/
 es_data/
 
+#metadata master
+master_meta.xlsx

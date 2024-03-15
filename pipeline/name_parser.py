@@ -1,7 +1,7 @@
 import re
 
-# parse and shorten arabic names from raw name to parsed shortened name
 
+# parse and shorten arabic names from raw name to parsed shortened name
 class NameParser:
     def parse_arabic_name(raw_name):
         substitutions = [

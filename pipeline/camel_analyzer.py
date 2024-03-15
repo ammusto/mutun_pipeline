@@ -6,6 +6,7 @@ from camel_tools.utils.normalize import normalize_unicode, normalize_alef_maksur
     normalize_teh_marbuta_ar
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
+from camel_tools.utils.dediac import dediac_ar
 
 
 class TextAnalyzer:
@@ -62,11 +63,9 @@ class TextAnalyzer:
             analysis_dict = {
                 "index": i,
                 "tok": d.word,  # Token
-                "lem": next((analysis.analysis['lex'] for analysis in d.analyses), None),  # lemma
+                "lem": next((dediac_ar(analysis.analysis['lex']) for analysis in d.analyses), None),  # lemma
                 "rt": next((analysis.analysis['root'] for analysis in d.analyses), None),  # root
                 "pos": next((analysis.analysis['pos'] for analysis in d.analyses), None),  # part-of-speech
-                "stt": next((analysis.analysis['stt'] for analysis in d.analyses), None),  # stem
-                "cas": next((analysis.analysis['cas'] for analysis in d.analyses), None)  # case
             }
             output.append(analysis_dict)  # add analysis dictionary to the output list
 

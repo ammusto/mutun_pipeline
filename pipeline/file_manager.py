@@ -25,25 +25,16 @@ class FileManager:
             raise ValueError("filename does not match expected pattern")
 
         au_date = au_death_hijri.lstrip('0')  # strip leading 0 from deathdate
-        #  retrieve and format raw title and source corpus from file name
         parts = file_name.split('.')
-        title_raw = parts[1]
-        source = parts[2]
-        add_spaces = lambda s: re.sub(r'(?<!^)(?=[A-Z])', ' ', s).strip()
-        au_name = add_spaces(au_name_raw)
-        title_en = add_spaces(title_raw)
-        parts[2] = re.sub(r'-ara\d*', '-ara', parts[2])
-        text_id = f"{parts[1] + '.' + parts[2]}"
+        text_id = re.sub(r'-ara\d*', '', parts[2])
 
         # populate the metadata fields
+        self.meta_data_manager.text_meta["text_uri"] = file_name
         self.meta_data_manager.text_meta["text_id"] = text_id
-        self.meta_data_manager.text_meta['title_auto'] = title_en
-        self.meta_data_manager.text_meta["text_version"] = re.sub(r'-ara\d*', '-ara', source)
         self.meta_data_manager.text_meta["author_id"] = parts[0]
         self.meta_data_manager.author_meta["author_id"] = parts[0]
         self.meta_data_manager.author_meta['au_death_hij'] = au_date
-        self.meta_data_manager.author_meta['author_auto'] = au_name
-        return source
+        return text_id
 
     # save data as JSON to a specified directory
     def save_meta_json(self, data, file_name, dir_path):
@@ -52,3 +43,27 @@ class FileManager:
         json_file_name = os.path.join(dir_path, clean_name + '.json')
         with open(json_file_name, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
+
+    # check logfile to get list of texts already parsed used in text_parser
+
+    def get_processed_files(self):
+        processed_files = set()
+        log_file = 'file_processing.log'
+        if os.path.exists(log_file):
+            with open(log_file, 'r') as log_file:
+                for line in log_file:
+                    if "Processed data from file" in line:
+                        filename = line.split("Processed data from file ")[1].split(",")[0].strip()
+                        processed_files.add(filename)
+        return processed_files
+
+    # function for naming and saving json objects for each page of a text used in text_parser
+
+    def save_page_json(self, page_data, base_filename, volume_num):
+        output_folder = os.path.join(self.text_content_path, base_filename)
+        os.makedirs(output_folder, exist_ok=True)
+        clean_name = re.sub(r'-ara\d*', '', base_filename)
+        output_filename = f"{clean_name.split('.')[-1]}-{volume_num}-{page_data['page_num']}.json"
+        output_file_path = os.path.join(output_folder, output_filename)
+        with open(output_file_path, 'w', encoding='utf-8') as outfile:
+            json.dump(page_data, outfile, ensure_ascii=False, indent=4)
