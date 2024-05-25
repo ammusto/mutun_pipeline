@@ -7,9 +7,9 @@ from config import Config
 class FileManager:
 
     # initialize the file manager with the provided path and metadata manager
-    def __init__(self, base_path, meta_data_manager):
-        self.config = Config(base_path)
-        self.rawdata_path = "data/primary_data"
+    def __init__(self, meta_data_manager):
+        self.config = Config()
+        self.rawdata_path = self.config.rawdata_path
         self.meta_data_manager = meta_data_manager
         self.author_meta_path = self.config.author_meta_path
         self.text_meta_path = self.config.text_meta_path
@@ -33,7 +33,7 @@ class FileManager:
         self.meta_data_manager.text_meta["text_id"] = text_id
         self.meta_data_manager.text_meta["author_id"] = parts[0]
         self.meta_data_manager.author_meta["author_id"] = parts[0]
-        self.meta_data_manager.author_meta['au_death_hij'] = au_date
+        self.meta_data_manager.author_meta['au_death'] = au_date
         return text_id
 
     # save data as JSON to a specified directory

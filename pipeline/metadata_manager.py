@@ -1,7 +1,7 @@
 import pandas as pd
 import re
-from pipeline.name_parser import NameParser
 
+from pipeline.name_parser import NameParser
 
 
 class MetaDataManager:
@@ -9,10 +9,10 @@ class MetaDataManager:
         self.df = df
         self.author_meta = {
             "author_id": "", "author_ar": "", "author_ar_shuhra": "", "author_lat": "", "author_lat_shuhra": "",
-            "author_auto": "", "au_death_hij": ""
+            "author_auto": "", "au_death": ""
         }
         self.text_meta = {
-            "text_uri": "", "text_id": "", "title_ar": "", "title_lat": "", "author_id": "", "ed_info": "",
+            "text_id": "", "text_uri": "", "title_ar": "", "title_lat": "", "author_id": "", "ed_info": "",
             "collection": "", "tok_length": "", "page_count": "", "volumes": "", "tags": ""
         }
         self.name_parser = NameParser()
@@ -62,12 +62,10 @@ class MetaDataManager:
         if metadata:
             # Extract metadata and update dictionaries
             self.author_meta["author_lat"] = metadata.get("author_lat", "")
-            self.text_meta["title_ar"] = metadata.get("title_ar", "")
             self.text_meta["ed_info"] = metadata.get("ed_info", "")
             self.text_meta["tok_length"] = metadata.get("tok_length", "")
             self.text_meta["tags"] = metadata.get("tags", "")
             self.author_meta["author_auto"] = metadata.get("author_from_uri", "")
-            self.author_meta["version"] = metadata.get("Version", "")
             collection = re.match(r'^([A-Za-z]+)', metadata.get("Version", "")).group(0)
 
             if collection in collection_mappings:
@@ -77,6 +75,14 @@ class MetaDataManager:
             if " :: " in metadata.get("title_lat", ""):
                 parts = metadata.get("title_lat", "").split(" :: ")
                 self.text_meta["title_lat"] = parts[0]
+            else:
+                self.text_meta["title_lat"] = metadata.get("title_lat", "")
+
+            if " :: " in metadata.get("title_ar", ""):
+                parts = metadata.get("title_ar", "").split(" :: ")
+                self.text_meta["title_ar"] = parts[0]
+            else:
+                self.text_meta["title_ar"] = metadata.get("title_ar", "")
 
             # Additional logic for author_lat_shuhra
             if not pd.isna(metadata.get("author_lat_shuhra", "")):
@@ -84,15 +90,20 @@ class MetaDataManager:
 
             # Additional logic for author_lat_full_name
             if not pd.isna(metadata.get("author_lat_full_name")):
-                self.author_meta["author_lat"] = f"{metadata['author_lat_shuhra']}, {metadata['author_lat_full_name']}"
+                if not pd.isna(metadata.get("author_lat_shuhra", "")):
+                    self.author_meta[
+                        "author_lat"] = f"{metadata['author_lat_shuhra']}, {metadata['author_lat_full_name']}"
+                else:
+                    self.author_meta["author_lat"] = metadata['author_lat_full_name']
 
             # Additional logic for author_ar
-            if " :: " in metadata.get("author_ar", ""):
+            if isinstance(metadata.get("author_ar", ""), str) and " :: " in metadata.get("author_ar", ""):
                 parts = metadata.get("author_ar", "").split(" :: ")
                 self.author_meta["author_ar_shuhra"] = parts[0]
-                self.author_meta["author_ar"] = parts[1]
+                self.author_meta["author_ar"] = self.name_parser.parse_arabic_name(parts[1])
             else:
-                self.author_meta["author_ar"] = metadata.get("author_ar", "")
+                self.author_meta["author_ar"] = self.name_parser.parse_arabic_name(metadata.get("author_ar", ""))
+
         else:
             print("Metadata not found for text_id:", text_id)
 

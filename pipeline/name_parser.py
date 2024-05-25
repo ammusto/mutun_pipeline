@@ -3,7 +3,9 @@ import re
 
 # parse and shorten arabic names from raw name to parsed shortened name
 class NameParser:
-    def parse_arabic_name(raw_name):
+    def parse_arabic_name(self, raw_name):
+        if not isinstance(raw_name, str):
+            return "NODATA"  # Return the input as it is if it's not a string
         substitutions = [
             (r'\(م\)', ''),
             (r'\(?(المتوفى).*', ''),
@@ -36,4 +38,5 @@ class NameParser:
         else:
             last_part = ""
         parsed_name = " بن ".join(name_parts[:2]) + " " + last_part if " بن " in removed_added else removed_added
+        parsed_name = parsed_name.rsplit("،", 1)[0] if "،" in parsed_name else parsed_name
         return parsed_name.strip()

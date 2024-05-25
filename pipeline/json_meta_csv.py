@@ -8,10 +8,10 @@ import logging
 logging.basicConfig(filename='json_to_csv.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s')
 
 # json folder
-json_folder = 'json/text_meta'
+json_folder = '../json/author_meta'
 
 # output CSV
-output_csv = 'text_master.csv'
+output_csv = '../author_master.csv'
 
 
 def load_json_data(json_folder):
