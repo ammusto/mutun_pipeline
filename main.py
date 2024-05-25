@@ -7,16 +7,20 @@ from camel_tools.disambig.bert import BERTUnfactoredDisambiguator
 
 config = Config()
 
+
 class ParserWorker:
     def __init__(self, disambiguator_type, use_gpu):
         if disambiguator_type == "BERT":
-            self.disambiguator = BERTUnfactoredDisambiguator.pretrained(use_gpu=use_gpu, cache_size=1000000)
+            self.disambiguator = BERTUnfactoredDisambiguator.pretrained(batch_size=128,
+                                                                        cache_size=100000,
+                                                                        pretrained_cache=False)
         else:
             self.disambiguator = MLEDisambiguator.pretrained()
         self.parser_instance = TextParser(self.disambiguator)
 
     def get_data(self, raw_file):
         return self.parser_instance.get_data(raw_file, self.parser_instance.disambiguator)
+
 
 def get_processed_files():
     processed_files = set()
@@ -28,6 +32,7 @@ def get_processed_files():
                     processed_files.add(filename)
     return processed_files
 
+
 def parse_directory(path, num_files=10000):
     print("Collecting filenames to be processed...")
     processed_files = set(get_processed_files())
@@ -38,12 +43,15 @@ def parse_directory(path, num_files=10000):
     files_to_process = [os.path.join(path, item) for item in limited_files]
     return files_to_process
 
+
 def worker_init(disambiguator_type, use_gpu):
     global worker_instance
     worker_instance = ParserWorker(disambiguator_type, use_gpu)
 
+
 def worker_func(raw_file):
     return worker_instance.get_data(raw_file)
+
 
 if __name__ == "__main__":
     base_path = os.getcwd()
