@@ -1,5 +1,6 @@
 import os
 
+
 class Config:
     def __init__(self):
         self.disambiguator = "BERT"  # "BERT" for the BER disambiguator or "MLE" for MLE disambiguator
@@ -10,4 +11,4 @@ class Config:
         self.text_content_path = 'json/text_content'
         self.use_gpu = True
         self.use_multiprocessing = True  # Set this to False to disable multiprocessing
-        self.num_processes = 7  # Set the number of processes to use
+        self.num_processes = 4  # Set the number of processes to use

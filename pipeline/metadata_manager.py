@@ -1,8 +1,6 @@
 import pandas as pd
 import re
-
 from pipeline.name_parser import NameParser
-
 
 class MetaDataManager:
     def __init__(self, df):
@@ -72,37 +70,42 @@ class MetaDataManager:
                 self.text_meta["collection"] = collection_mappings[collection]
 
             # Additional logic for title_lat
-            if " :: " in metadata.get("title_lat", ""):
-                parts = metadata.get("title_lat", "").split(" :: ")
+            title_lat = str(metadata.get("title_lat", ""))
+            if " :: " in title_lat:
+                parts = title_lat.split(" :: ")
                 self.text_meta["title_lat"] = parts[0]
             else:
-                self.text_meta["title_lat"] = metadata.get("title_lat", "")
+                self.text_meta["title_lat"] = title_lat
 
-            if " :: " in metadata.get("title_ar", ""):
-                parts = metadata.get("title_ar", "").split(" :: ")
+            # Additional logic for title_ar
+            title_ar = str(metadata.get("title_ar", ""))
+            if " :: " in title_ar:
+                parts = title_ar.split(" :: ")
                 self.text_meta["title_ar"] = parts[0]
             else:
-                self.text_meta["title_ar"] = metadata.get("title_ar", "")
+                self.text_meta["title_ar"] = title_ar
 
             # Additional logic for author_lat_shuhra
-            if not pd.isna(metadata.get("author_lat_shuhra", "")):
-                self.author_meta["author_lat_shuhra"] = metadata["author_lat_shuhra"]
+            author_lat_shuhra = metadata.get("author_lat_shuhra", "")
+            if not pd.isna(author_lat_shuhra):
+                self.author_meta["author_lat_shuhra"] = author_lat_shuhra
 
             # Additional logic for author_lat_full_name
-            if not pd.isna(metadata.get("author_lat_full_name")):
-                if not pd.isna(metadata.get("author_lat_shuhra", "")):
-                    self.author_meta[
-                        "author_lat"] = f"{metadata['author_lat_shuhra']}, {metadata['author_lat_full_name']}"
+            author_lat_full_name = metadata.get("author_lat_full_name", "")
+            if not pd.isna(author_lat_full_name):
+                if not pd.isna(author_lat_shuhra):
+                    self.author_meta["author_lat"] = f"{author_lat_shuhra}, {author_lat_full_name}"
                 else:
-                    self.author_meta["author_lat"] = metadata['author_lat_full_name']
+                    self.author_meta["author_lat"] = author_lat_full_name
 
             # Additional logic for author_ar
-            if isinstance(metadata.get("author_ar", ""), str) and " :: " in metadata.get("author_ar", ""):
-                parts = metadata.get("author_ar", "").split(" :: ")
+            author_ar = str(metadata.get("author_ar", ""))
+            if " :: " in author_ar:
+                parts = author_ar.split(" :: ")
                 self.author_meta["author_ar_shuhra"] = parts[0]
                 self.author_meta["author_ar"] = self.name_parser.parse_arabic_name(parts[1])
             else:
-                self.author_meta["author_ar"] = self.name_parser.parse_arabic_name(metadata.get("author_ar", ""))
+                self.author_meta["author_ar"] = self.name_parser.parse_arabic_name(author_ar)
 
         else:
             print("Metadata not found for text_id:", text_id)

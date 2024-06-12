@@ -123,7 +123,7 @@ class TextParser:
                                          self.file_manager.text_meta_path)
 
         end_time = time.time()
-        logging.info(f"File {base_filename};"
+        logging.info(f"Processed file {base_filename};"
                      f" {self.meta_data_manager.text_meta['page_count']} pgs;"
                      f" {self.total_tokens} toks;"
                      f" {end_time - start_time:.2f} secs;"

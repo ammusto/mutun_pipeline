@@ -2,11 +2,13 @@ import regex
 import re
 import logging
 from camel_tools.tokenizers.word import simple_word_tokenize
-from camel_tools.utils.normalize import normalize_unicode, normalize_alef_maksura_ar, normalize_alef_ar, normalize_teh_marbuta_ar
+from camel_tools.utils.normalize import normalize_unicode, normalize_alef_maksura_ar, normalize_alef_ar, \
+    normalize_teh_marbuta_ar
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
 from camel_tools.utils.dediac import dediac_ar
 import traceback
+
 
 class TextAnalyzer:
     def __init__(self, text, disambiguator):
@@ -64,9 +66,13 @@ class TextAnalyzer:
                     if not d.analyses:
                         raise ValueError(f"No analyses found for token: {d.word}")
 
-                    lemma = next((dediac_ar(analysis.analysis['lex']) for analysis in d.analyses if 'lex' in analysis.analysis), None)
-                    root = next((analysis.analysis['root'] for analysis in d.analyses if 'root' in analysis.analysis), None)
-                    pos = next((analysis.analysis['pos'] for analysis in d.analyses if 'pos' in analysis.analysis), None)
+                    lemma = next(
+                        (dediac_ar(analysis.analysis['lex']) for analysis in d.analyses if 'lex' in analysis.analysis),
+                        None)
+                    root = next((analysis.analysis['root'] for analysis in d.analyses if 'root' in analysis.analysis),
+                                None)
+                    pos = next((analysis.analysis['pos'] for analysis in d.analyses if 'pos' in analysis.analysis),
+                               None)
 
                     if lemma is None or root is None or pos is None:
                         raise ValueError(f"Incomplete analysis for token: {d.word}")
@@ -80,7 +86,8 @@ class TextAnalyzer:
                     }
                     output.append(analysis_dict)  # add analysis dictionary to the output list
                 except Exception as token_error:
-                    logging.error(f"Error processing token: {d.word}, Error: {str(token_error)}, Traceback: {traceback.format_exc()}")
+                    logging.error(
+                        f"Error processing token: {d.word}, Error: {str(token_error)}, Traceback: {traceback.format_exc()}")
                     output.append({
                         "index": i,
                         "tok": d.word if hasattr(d, 'word') else None,

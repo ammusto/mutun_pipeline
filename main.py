@@ -11,9 +11,10 @@ config = Config()
 class ParserWorker:
     def __init__(self, disambiguator_type, use_gpu):
         if disambiguator_type == "BERT":
-            self.disambiguator = BERTUnfactoredDisambiguator.pretrained(batch_size=128,
+            self.disambiguator = BERTUnfactoredDisambiguator.pretrained(batch_size=64,
                                                                         cache_size=100000,
-                                                                        pretrained_cache=False)
+                                                                        pretrained_cache=False,
+                                                                        ranking_cache_size=0)
         else:
             self.disambiguator = MLEDisambiguator.pretrained()
         self.parser_instance = TextParser(self.disambiguator)
@@ -27,13 +28,13 @@ def get_processed_files():
     if os.path.exists('file_processing.log'):
         with open('file_processing.log', 'r') as log_file:
             for line in log_file:
-                if "Processed data from file" in line:
-                    filename = line.split("Processed data from file ")[1].split(",")[0].strip()
+                if "Processed file" in line:
+                    filename = line.split("Processed file")[1].split(";")[0].strip()
                     processed_files.add(filename)
     return processed_files
 
 
-def parse_directory(path, num_files=10000):
+def parse_directory(path, num_files=1000):
     print("Collecting filenames to be processed...")
     processed_files = set(get_processed_files())
     all_files = os.listdir(path)
